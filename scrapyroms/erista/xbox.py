@@ -1,6 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
 import csv, urllib
+import json
+import csv
+import requests
+import urllib
+from urllib.parse import urlparse, quote
+import undetected_chromedriver as uc 
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 
 def tiny_url(url):
     apiurl = "http://tinyurl.com/api-create.php?url="
@@ -14,14 +24,14 @@ def scrap(url):
     # Find all the links on the webpage
     links = soup.find_all('a')
     
-    with open('Xbox Classic.csv', 'a', newline='', encoding="utf-8") as csvfile:
+    with open('Xbox 360.csv', 'a', newline='', encoding="utf-8") as csvfile:
         csvwriter  = csv.writer(csvfile, delimiter=';')
         
         for link in links:
             if 'zip' in link.text:
                 name = link.text.replace('.zip', '').strip()
                 size = link.parent.parent.find_all('td')[1].text
-                link = url + '/' + link['href']
+                link = url + link['href']
                 try:
                     link = tiny_url(link)
                 except:
@@ -30,5 +40,5 @@ def scrap(url):
                 csvwriter.writerows([[name, link, size, format, url]])
                 print(name + ':' + link) 
                 
-url = 'https://myrient.erista.me/files/Redump/Microsoft%20-%20Xbox/'
+url = 'https://myrient.erista.me/files/Redump/Microsoft%20-%20Xbox%20360/'
 scrap(url)    

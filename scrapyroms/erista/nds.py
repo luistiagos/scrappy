@@ -1,6 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
-import csv
+import csv, urllib
+
+def tiny_url(url):
+    apiurl = "http://tinyurl.com/api-create.php?url="
+    tinyurl = urllib.request.urlopen(apiurl + url).read()
+    return tinyurl.decode("utf-8")
 
 def scrap(url):
     response = requests.get(url)
@@ -9,15 +14,19 @@ def scrap(url):
     # Find all the links on the webpage
     links = soup.find_all('a')
     
-    with open('Nintendo DS (Encrypted).csv', 'a', newline='', encoding="utf-8") as csvfile:
+    with open('Dreamcast_roms_chd.csv', 'a', newline='', encoding="utf-8") as csvfile:
         csvwriter  = csv.writer(csvfile, delimiter=';')
         
         for link in links:
             if '.zip' in link.text:
                 name = link.text.replace('.zip', '').strip()
-                link = url + '/' + link['href']
+                link = url + link['href']
+                try:
+                    link = tiny_url(link)
+                except:
+                    pass
                 csvwriter.writerows([[name, link]])
                 print(name + ':' + link) 
                 
-url = 'https://myrient.erista.me/files/No-Intro/Nintendo%20-%20Nintendo%20DS%20(Encrypted)/'
+url = 'https://myrient.erista.me/files/Redump/Sega%20-%20Dreamcast%20-%20GDI%20Files/'
 scrap(url)     

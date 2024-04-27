@@ -53,7 +53,7 @@ def scrap(name, filename):
 
         for key, values in files_data.items():
             name = key.strip("/")
-            if 'zip' in name or 'rar' in name or '7z' in name:
+            if 'zip' in name or 'rar' in name or '7z' in name or 'nds' in name or 'chd' in name:
                 origem = 'https://archive.org/download/' + base
                 size = convert_to_original_size(float(values["size"]))
                 link = origem + "/" + name
@@ -64,11 +64,13 @@ def scrap(name, filename):
                 format_type = values["format"]
                 csv_writer.writerow([name, link, size, format_type, origem, type])
                 
-names = ['3ds-main-encrypted','3ds-main-encrypted-p2','nintendo-3ds-eshop-complete-collection',
-         'nintendo-3ds-complete-collection','nintendo-3ds-complete-collection-pt2','3ds-dlc-and-updates-encrypted']
+names = ['chd_dc']
 for name in names:
     print(name)
     try:
-        scrap(name, '3ds-games.csv')
+        scrap(name, 'jogos_dreamcast_chd.csv')
     except:
         print('Error - ' + name)
+        
+        
+        
